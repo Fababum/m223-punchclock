@@ -3,6 +3,7 @@ package ch.zli.m223.controller;
 import java.util.List;
 
 import jakarta.inject.Inject;
+import jakarta.validation.Valid;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.GET;
@@ -17,6 +18,7 @@ import jakarta.ws.rs.core.Response;
 import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 
+import ch.zli.m223.dto.EntryDto;
 import ch.zli.m223.model.Entry;
 import ch.zli.m223.service.EntryService;
 
@@ -30,16 +32,17 @@ public class EntryController {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(summary = "Index all Entries.", description = "Returns a list of all entries.")
-    public List<Entry> index() {
-        return entryService.findAll();
+    public List<EntryDto> index() {
+        return entryService.findAll().stream().map(EntryDto::fromEntity).toList();
     }
 
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     @Operation(summary = "Creates a new entry.", description = "Creates a new entry and returns the newly added entry.")
-    public Entry create(Entry entry) {
-       return entryService.createEntry(entry);
+    public EntryDto create(@Valid EntryDto entryDto) {
+        Entry entry = entryService.createEntry(EntryDto.toEntity(entryDto));
+        return EntryDto.fromEntity(entry);
     }
 
     @DELETE
@@ -58,12 +61,12 @@ public class EntryController {
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     @Operation(summary = "Edit an entry.", description = "Edit a created entry and returns the updated entry.")
-    public Response put(@PathParam("id") Long id, Entry entry) {
-        Entry updated = entryService.updateEntry(id, entry);
+    public Response put(@PathParam("id") Long id, @Valid EntryDto entryDto) {
+        Entry updated = entryService.updateEntry(id, EntryDto.toEntity(entryDto));
         if (updated == null) {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
 
-        return Response.ok(updated).build();
+        return Response.ok(EntryDto.fromEntity(updated)).build();
     }
 }

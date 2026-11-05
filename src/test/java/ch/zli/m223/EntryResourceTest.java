@@ -71,4 +71,43 @@ public class EntryResourceTest {
              .body("size()", is(0));
     }
 
+    @Test
+    public void testValidation() {
+        given()
+          .contentType("application/json")
+          .body("""
+              {"checkOut":"2026-09-29T17:00:00"}
+              """)
+          .when().post("/entries")
+          .then()
+             .statusCode(400);
+
+        given()
+          .contentType("application/json")
+          .body("""
+              {"checkIn":"2026-09-29T08:00:00"}
+              """)
+          .when().post("/entries")
+          .then()
+             .statusCode(400);
+
+        given()
+          .contentType("application/json")
+          .body("""
+              {"checkIn":"2026-09-29T17:00:00","checkOut":"2026-09-29T08:00:00"}
+              """)
+          .when().post("/entries")
+          .then()
+             .statusCode(400);
+
+        given()
+          .contentType("application/json")
+          .body("""
+              {"checkIn":"2026-09-29T17:00:00","checkOut":"2026-09-29T08:00:00"}
+              """)
+          .when().put("/entries/1")
+          .then()
+             .statusCode(400);
+    }
+
 }
