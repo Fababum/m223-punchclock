@@ -37,6 +37,38 @@ public class EntryResourceTest {
              .body("[0].id", is(id.intValue()))
              .body("[0].checkIn", is("2026-09-29T08:00:00"))
              .body("[0].checkOut", is("2026-09-29T17:00:00"));
+
+        given()
+          .contentType("application/json")
+          .body("""
+              {"checkIn":"2026-09-29T09:00:00","checkOut":"2026-09-29T18:00:00"}
+              """)
+          .when().put("/entries/{id}", id)
+          .then()
+             .statusCode(200)
+             .body("id", is(id.intValue()))
+             .body("checkIn", is("2026-09-29T09:00:00"))
+             .body("checkOut", is("2026-09-29T18:00:00"));
+
+        given()
+          .contentType("application/json")
+          .body("""
+              {"checkIn":"2026-09-29T09:00:00","checkOut":"2026-09-29T18:00:00"}
+              """)
+          .when().put("/entries/{id}", id + 1000)
+          .then()
+             .statusCode(404);
+
+        given()
+          .when().delete("/entries/{id}", id)
+          .then()
+             .statusCode(204);
+
+        given()
+          .when().get("/entries")
+          .then()
+             .statusCode(200)
+             .body("size()", is(0));
     }
 
 }

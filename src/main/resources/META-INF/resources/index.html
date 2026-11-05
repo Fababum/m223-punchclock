@@ -17,7 +17,8 @@
             <label for="checkOut">Check out</label>
             <input type="date" name="checkOutDate" id="checkOut" required>
             <input type="time" name="checkOutTime" required>
-            <input type="submit" value="Save" />
+            <input type="submit" name="submit" value="Save" />
+            <button type="button" id="cancelEdit" hidden>Cancel</button>
         </form>
         <table>
             <thead>
@@ -25,11 +26,12 @@
                     <th>ID</th>
                     <th>Check in</th>
                     <th>Check out</th>
+                    <th></th>
                 </tr>
             </thead>
             <tbody id="entryDisplay">
                 <tr>
-                    <td colspan="3">Loading...</td>
+                    <td colspan="4">Loading...</td>
                 </tr>
             </tbody>
         </table>

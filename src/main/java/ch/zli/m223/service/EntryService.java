@@ -20,6 +20,23 @@ public class EntryService {
         return entry;
     }
 
+    @Transactional
+    public boolean deleteEntry(Long id) {
+        return entryRepository.deleteById(id);
+    }
+
+    @Transactional
+    public Entry updateEntry(Long id, Entry entry) {
+        Entry existing = entryRepository.findById(id);
+        if (existing == null) {
+            return null;
+        }
+
+        existing.setCheckIn(entry.getCheckIn());
+        existing.setCheckOut(entry.getCheckOut());
+        return existing;
+    }
+
     public List<Entry> findAll() {
         return entryRepository.listAll();
     }
