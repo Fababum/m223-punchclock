@@ -6,6 +6,7 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 
+import ch.zli.m223.dto.TimeSummaryDto;
 import ch.zli.m223.model.Entry;
 import ch.zli.m223.repository.EntryRepository;
 
@@ -13,6 +14,9 @@ import ch.zli.m223.repository.EntryRepository;
 public class EntryService {
     @Inject
     private EntryRepository entryRepository;
+
+    @Inject
+    private TimeSummaryService timeSummaryService;
 
     @Transactional
     public Entry createEntry(Entry entry) {
@@ -39,5 +43,10 @@ public class EntryService {
 
     public List<Entry> findAll() {
         return entryRepository.listAll();
+    }
+
+    public List<TimeSummaryDto> getTimeSummaries() {
+        List<Entry> entries = entryRepository.listAll();
+        return timeSummaryService.calculateSummaryPerDay(entries);
     }
 }

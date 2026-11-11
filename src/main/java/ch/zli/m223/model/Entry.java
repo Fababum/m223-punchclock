@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
 
 import java.time.LocalDateTime;
+import java.util.Set;
 
 @Entity
 public class Entry {
@@ -41,5 +42,34 @@ public class Entry {
 
   public void setCheckOut(LocalDateTime checkOut) {
     this.checkOut = checkOut;
+  }
+
+
+  @ManyToOne
+  @JoinColumn(name = "category_id")
+  private Category category;
+
+  public Category getCategory() {
+    return category;
+  }
+
+  public void setCategory(Category category) {
+    this.category = category;
+  }
+
+
+  @ManyToMany
+  @JoinTable(
+      name = "entry_tag",
+      joinColumns = @JoinColumn(name = "entry_id"),
+      inverseJoinColumns = @JoinColumn(name = "tag_id"))
+  private Set<Tag> tags;
+
+  public Set<Tag> getTags() {
+    return tags;
+  }
+
+  public void setTags(Set<Tag> tags) {
+    this.tags = tags;
   }
 }
