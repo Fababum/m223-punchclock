@@ -4,6 +4,7 @@ import java.time.Duration;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
@@ -18,6 +19,7 @@ import ch.zli.m223.service.EntryService;
 
 @Path("/statistics")
 @Tag(name = "Statistics", description = "Statistics about entries")
+@RolesAllowed({"User", "Admin"})
 public class StatisticsController {
 
     @Inject

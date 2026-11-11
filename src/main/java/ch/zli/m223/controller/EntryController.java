@@ -21,9 +21,11 @@ import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 import ch.zli.m223.dto.EntryDto;
 import ch.zli.m223.model.Entry;
 import ch.zli.m223.service.EntryService;
+import jakarta.annotation.security.RolesAllowed;
 
 @Path("/entries")
 @Tag(name = "Entries", description = "Handling of entries")
+@RolesAllowed({"User", "Admin"})
 public class EntryController {
 
     @Inject
@@ -47,6 +49,7 @@ public class EntryController {
 
     @DELETE
     @Path("/{id}")
+    @RolesAllowed("Admin")
     @Operation(summary = "Delete an entry.", description = "Delete a created entry.")
     public Response delete(@PathParam("id") Long id) {
         if (!entryService.deleteEntry(id)) {

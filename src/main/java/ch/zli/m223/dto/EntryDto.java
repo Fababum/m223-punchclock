@@ -13,9 +13,11 @@ public class EntryDto {
     @Schema(readOnly = true)
     private Long id;
 
+    @Schema(examples = {"2022-03-10T08:00:00"})
     @NotNull(message = "checkIn is required")
     private LocalDateTime checkIn;
 
+    @Schema(examples = {"2022-03-10T17:00:00"})
     @NotNull(message = "checkOut is required")
     private LocalDateTime checkOut;
 
