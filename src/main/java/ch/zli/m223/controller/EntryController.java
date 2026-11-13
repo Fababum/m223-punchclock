@@ -19,7 +19,6 @@ import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 
 import ch.zli.m223.dto.EntryDto;
-import ch.zli.m223.model.Entry;
 import ch.zli.m223.service.EntryService;
 import jakarta.annotation.security.RolesAllowed;
 
@@ -35,7 +34,7 @@ public class EntryController {
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(summary = "Index all Entries.", description = "Returns a list of all entries.")
     public List<EntryDto> index() {
-        return entryService.findAll().stream().map(EntryDto::fromEntity).toList();
+        return entryService.findAllDtos();
     }
 
     @POST
@@ -43,8 +42,7 @@ public class EntryController {
     @Consumes(MediaType.APPLICATION_JSON)
     @Operation(summary = "Creates a new entry.", description = "Creates a new entry and returns the newly added entry.")
     public EntryDto create(@Valid EntryDto entryDto) {
-        Entry entry = entryService.createEntry(EntryDto.toEntity(entryDto));
-        return EntryDto.fromEntity(entry);
+        return entryService.createEntry(entryDto);
     }
 
     @DELETE
@@ -65,11 +63,11 @@ public class EntryController {
     @Consumes(MediaType.APPLICATION_JSON)
     @Operation(summary = "Edit an entry.", description = "Edit a created entry and returns the updated entry.")
     public Response put(@PathParam("id") Long id, @Valid EntryDto entryDto) {
-        Entry updated = entryService.updateEntry(id, EntryDto.toEntity(entryDto));
+        EntryDto updated = entryService.updateEntry(id, entryDto);
         if (updated == null) {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
 
-        return Response.ok(EntryDto.fromEntity(updated)).build();
+        return Response.ok(updated).build();
     }
 }

@@ -7,6 +7,7 @@ import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 
 import ch.zli.m223.model.Category;
+import ch.zli.m223.model.Entry;
 import ch.zli.m223.repository.CategoryRepository;
 
 @ApplicationScoped
@@ -22,7 +23,17 @@ public class CategoryService {
 
     @Transactional
     public boolean deleteCategory(Long id) {
-        return categoryRepository.deleteById(id);
+        Category category = categoryRepository.findById(id);
+        if (category == null) {
+            return false;
+        }
+        if (category.getEntries() != null) {
+            for (Entry entry : category.getEntries()) {
+                entry.setCategory(null);
+            }
+        }
+        categoryRepository.delete(category);
+        return true;
     }
 
     @Transactional
